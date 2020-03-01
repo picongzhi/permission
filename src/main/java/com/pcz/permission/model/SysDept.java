@@ -1,7 +1,17 @@
 package com.pcz.permission.model;
 
+import ch.qos.logback.core.joran.spi.NoAutoStart;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.util.Date;
 
+@Builder
+@NoArgsConstructor
+@ToString
+@AllArgsConstructor
 public class SysDept {
     private Integer id;
 
