@@ -28,7 +28,7 @@ public class SysTreeServiceImpl implements SysTreeService {
 
     @Override
     public List<DeptLevelDto> deptTree() {
-        List<SysDept> deptList = sysDeptMapper.getAllDept();
+        List<SysDept> deptList = sysDeptMapper.selectAllDept();
         List<DeptLevelDto> deptLevelDtoList = Lists.newArrayList();
         for (SysDept sysDept : deptList) {
             DeptLevelDto deptLevelDto = DeptLevelDto.adapt(sysDept);
@@ -66,7 +66,7 @@ public class SysTreeServiceImpl implements SysTreeService {
             List<DeptLevelDto> tempDeptList = (List<DeptLevelDto>) levelDeptMap.get(nextLevel);
             if (CollectionUtils.isNotEmpty(tempDeptList)) {
                 Collections.sort(tempDeptList, deptSeqComparator);
-                deptLevelDto.setDetpList(tempDeptList);
+                deptLevelDto.setDeptList(tempDeptList);
                 transformDeptTree(tempDeptList, nextLevel, levelDeptMap);
             }
         }

@@ -7,4 +7,6 @@ import com.pcz.permission.param.DeptParam;
  */
 public interface SysDeptService {
     void save(DeptParam deptParam);
+
+    void update(DeptParam deptParam);
 }
