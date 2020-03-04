@@ -62,4 +62,10 @@ public class UserController {
             request.getRequestDispatcher(path).forward(request, response);
         }
     }
+
+    @RequestMapping("/logout.page")
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        request.getSession().invalidate();
+        response.sendRedirect("signup.jsp");
+    }
 }

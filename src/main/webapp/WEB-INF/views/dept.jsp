@@ -404,14 +404,17 @@
                             return deptMap[this.deptId].name;
                         },
                         "showStatus": function () {
-                            return this.status == 1 ? '有效' : (this.status == 0 ? '无效' : '删除');
+                            return this.status === 1 ?
+                                '有效' :
+                                (this.status === 0 ?
+                                    '无效' : '删除');
                         },
                         "bold": function () {
                             return function (text, render) {
                                 var status = render(text);
-                                if (status == '有效') {
+                                if (status === '有效') {
                                     return "<span class='label label-sm label-success'>有效</span>";
-                                } else if (status == '无效') {
+                                } else if (status === '无效') {
                                     return "<span class='label label-sm label-warning'>无效</span>";
                                 } else {
                                     return "<span class='label'>删除</span>";
@@ -419,14 +422,17 @@
                             }
                         }
                     });
+
                     $("#userList").html(rendered);
                     bindUserClick();
+
                     $.each(result.data.data, function (i, user) {
                         userMap[user.id] = user;
                     })
                 } else {
                     $("#userList").html('');
                 }
+
                 var pageSize = $("#pageSize").val();
                 var pageNo = $("#userPage .pageNo").val() || 1;
                 renderPage(url, result.data.total, pageNo, pageSize, result.data.total > 0 ? result.data.data.length : 0, "userPage", renderUserListAndPage);

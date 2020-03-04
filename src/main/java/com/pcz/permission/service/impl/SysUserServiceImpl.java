@@ -1,6 +1,8 @@
 package com.pcz.permission.service.impl;
 
 import com.google.common.base.Preconditions;
+import com.pcz.permission.beans.PageQuery;
+import com.pcz.permission.beans.PageResult;
 import com.pcz.permission.dao.SysUserMapper;
 import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysUser;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author picongzhi
@@ -89,5 +92,21 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUser findByKeyword(String keyword) {
         return sysUserMapper.findByKeyword(keyword);
+    }
+
+    @Override
+    public PageResult<SysUser> getPageByDeptId(int deptId, PageQuery pageQuery) {
+        BeanValidator.check(pageQuery);
+
+        int count = sysUserMapper.countByDeptId(deptId);
+        if (count > 0) {
+            List<SysUser> sysUserList = sysUserMapper.getPageByDeptId(deptId, pageQuery);
+            return PageResult.<SysUser>builder()
+                    .data(sysUserList)
+                    .total(count)
+                    .build();
+        }
+
+        return PageResult.<SysUser>builder().build();
     }
 }
