@@ -43,6 +43,17 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>login</filter-name>
+        <filter-class>com.pcz.permission.filter.LoginFilter</filter-class>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>login</filter-name>
+        <url-pattern>/sys/*</url-pattern>
+        <url-pattern>/admin/*</url-pattern>
+    </filter-mapping>
+
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>

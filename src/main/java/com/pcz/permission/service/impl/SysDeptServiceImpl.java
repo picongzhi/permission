@@ -1,12 +1,14 @@
 package com.pcz.permission.service.impl;
 
 import com.google.common.base.Preconditions;
+import com.pcz.permission.common.RequestHolder;
 import com.pcz.permission.dao.SysDeptMapper;
 import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysDept;
 import com.pcz.permission.param.DeptParam;
 import com.pcz.permission.service.SysDeptService;
 import com.pcz.permission.util.BeanValidator;
+import com.pcz.permission.util.IpUtil;
 import com.pcz.permission.util.LevelUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +40,8 @@ public class SysDeptServiceImpl implements SysDeptService {
                 .remark(deptParam.getRemark())
                 .build();
         sysDept.setLevel(LevelUtil.calculateLevel(getLevel(deptParam.getParentId()), deptParam.getParentId()));
-        sysDept.setOperator("system");
-        sysDept.setOperateIp("127.0.0.1");
+        sysDept.setOperator(RequestHolder.getCurrentUser().getUsername());
+        sysDept.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         sysDept.setOperateTime(new Date());
 
         sysDeptMapper.insertSelective(sysDept);
@@ -76,8 +78,8 @@ public class SysDeptServiceImpl implements SysDeptService {
                 .remark(deptParam.getRemark())
                 .build();
         after.setLevel(LevelUtil.calculateLevel(getLevel(deptParam.getParentId()), deptParam.getParentId()));
-        after.setOperator("system-update");
-        after.setOperateIp("127.0.0.1");
+        after.setOperator(RequestHolder.getCurrentUser().getUsername());
+        after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         after.setOperateTime(new Date());
 
         updateWithChild(before, after);

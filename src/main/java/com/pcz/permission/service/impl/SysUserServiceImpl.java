@@ -3,12 +3,14 @@ package com.pcz.permission.service.impl;
 import com.google.common.base.Preconditions;
 import com.pcz.permission.beans.PageQuery;
 import com.pcz.permission.beans.PageResult;
+import com.pcz.permission.common.RequestHolder;
 import com.pcz.permission.dao.SysUserMapper;
 import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysUser;
 import com.pcz.permission.param.UserParam;
 import com.pcz.permission.service.SysUserService;
 import com.pcz.permission.util.BeanValidator;
+import com.pcz.permission.util.IpUtil;
 import com.pcz.permission.util.MD5Util;
 import com.pcz.permission.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +43,8 @@ public class SysUserServiceImpl implements SysUserService {
                 .deptId(param.getDeptId())
                 .status(param.getStatus())
                 .remark(param.getRemark()).build();
-        sysUser.setOperator("system");
-        sysUser.setOperateIp("127.0.0.1");
+        sysUser.setOperator(RequestHolder.getCurrentUser().getUsername());
+        sysUser.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         sysUser.setOperateTime(new Date());
 
         sysUserMapper.insertSelective(sysUser);
@@ -63,8 +65,8 @@ public class SysUserServiceImpl implements SysUserService {
                 .deptId(param.getDeptId())
                 .status(param.getStatus())
                 .remark(param.getRemark()).build();
-        after.setOperator("system");
-        after.setOperateIp("127.0.0.1");
+        after.setOperator(RequestHolder.getCurrentUser().getUsername());
+        after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         after.setOperateTime(new Date());
 
         sysUserMapper.updateByPrimaryKeySelective(after);

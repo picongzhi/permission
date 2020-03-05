@@ -488,6 +488,7 @@
                     }
                 })
             });
+
             $(".user-edit").click(function (e) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -557,10 +558,15 @@
         }
 
         function updateUser(isCreate, successCallback, failCallback) {
+            var data = getFormObjectData($("#userForm").serializeArray());
             $.ajax({
                 url: isCreate ? "/sys/user/save.json" : "/sys/user/update.json",
-                data: $("#userForm").serializeArray(),
+                data: JSON.stringify(data),
                 type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 success: function (result) {
                     if (result.ret) {
                         loadDeptTree();
