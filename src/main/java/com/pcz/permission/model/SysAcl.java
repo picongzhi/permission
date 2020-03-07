@@ -1,7 +1,14 @@
 package com.pcz.permission.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+
 import java.util.Date;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SysAcl {
     private Integer id;
 
@@ -25,7 +32,7 @@ public class SysAcl {
 
     private Date operateTime;
 
-    private byte[] operateId;
+    private String operateIp;
 
     public Integer getId() {
         return id;
@@ -115,11 +122,11 @@ public class SysAcl {
         this.operateTime = operateTime;
     }
 
-    public byte[] getOperateId() {
-        return operateId;
+    public String getOperateIp() {
+        return operateIp;
     }
 
-    public void setOperateId(byte[] operateId) {
-        this.operateId = operateId;
+    public void setOperateIp(String operateIp) {
+        this.operateIp = operateIp == null ? null : operateIp.trim();
     }
 }
