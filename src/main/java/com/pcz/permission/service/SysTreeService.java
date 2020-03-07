@@ -1,5 +1,6 @@
 package com.pcz.permission.service;
 
+import com.pcz.permission.dto.AclModuleLevelDto;
 import com.pcz.permission.dto.DeptLevelDto;
 
 import java.util.List;
@@ -9,4 +10,6 @@ import java.util.List;
  */
 public interface SysTreeService {
     List<DeptLevelDto> deptTree();
+
+    List<AclModuleLevelDto> aclModuleTree();
 }

@@ -177,4 +177,10 @@
             WHERE id = #{sysAclModule.id}
         </foreach>
     </update>
+
+    <select id="selectAllAclModule" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM sys_acl_module
+    </select>
 </mapper>
