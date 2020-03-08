@@ -19,7 +19,7 @@ public interface SysAclMapper {
 
     int updateByPrimaryKey(SysAcl record);
 
-    int countByNameAndAclModuleId(@Param("aclModuleId") int aclModuleId, @Param("name") String name, @Param("id") int id);
+    int countByNameAndAclModuleId(@Param("aclModuleId") int aclModuleId, @Param("name") String name, @Param("id") Integer id);
 
     int countByAclModuleId(@Param("aclModuleId") int aclModuleId);
 

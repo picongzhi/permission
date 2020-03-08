@@ -350,10 +350,15 @@
         }
 
         function updateAcl(isCreate, successCallback, failCallback) {
+            var data = getFormObjectData($("#aclForm").serializeArray());
             $.ajax({
                 url: isCreate ? "/sys/acl/save.json" : "/sys/acl/update.json",
-                data: $("#aclForm").serializeArray(),
+                data: JSON.stringify(data),
                 type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 success: function (result) {
                     if (result.ret) {
                         loadAclList(lastClickAclModuleId);
@@ -539,10 +544,10 @@
                             return aclModuleMap[this.aclModuleId].name;
                         },
                         "showStatus": function () {
-                            return this.status == 1 ? "有效" : "无效";
+                            return this.status === 1 ? "有效" : "无效";
                         },
                         "showType": function () {
-                            return this.type == 1 ? "菜单" : (this.type == 2 ? "按钮" : "其他");
+                            return this.type === 1 ? "菜单" : (this.type === 2 ? "按钮" : "其他");
                         },
                         "bold": function () {
                             return function (text, render) {
