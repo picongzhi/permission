@@ -124,6 +124,9 @@
         </li>
     {{/roleList}}
 </ol>
+
+
+
 </script>
 
 <script id="selectedUsersTemplate" type="x-tmpl-mustache">
@@ -131,12 +134,18 @@
     <option value="{{id}}" selected="selected">{{username}}</option>
 {{/userList}}
 
+
+
+
 </script>
 
 <script id="unSelectedUsersTemplate" type="x-tmpl-mustache">
 {{#userList}}
     <option value="{{id}}">{{username}}</option>
 {{/userList}}
+
+
+
 
 </script>
 
@@ -269,15 +278,16 @@
         }
 
         function loadRoleAcl(selectedRoleId) {
-            if (selectedRoleId == -1) {
+            if (selectedRoleId === -1) {
                 return;
             }
+
             $.ajax({
                 url: "/sys/role/roleTree.json",
                 data: {
                     roleId: selectedRoleId
                 },
-                type: 'POST',
+                type: 'GET',
                 success: function (result) {
                     if (result.ret) {
                         renderRoleTree(result.data);
