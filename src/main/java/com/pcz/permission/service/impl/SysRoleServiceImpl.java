@@ -64,6 +64,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         after.setOperateIp(IpUtil.getRemoteIp(RequestHolder.getCurrentRequest()));
         after.setOperateTime(new Date());
 
+        sysRoleMapper.updateByPrimaryKeySelective(after);
     }
 
     @Override

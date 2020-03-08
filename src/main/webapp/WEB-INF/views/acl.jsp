@@ -665,15 +665,6 @@
                 }
             });
         })
-
-        function getFormObjectData(formArray) {
-            var data = formArray.reduce(function (obj, item) {
-                obj[item.name] = item.value;
-                return obj;
-            }, {});
-
-            return data;
-        }
     })
 </script>
 

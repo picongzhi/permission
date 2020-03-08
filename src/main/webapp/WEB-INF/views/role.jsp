@@ -104,6 +104,7 @@
         </table>
     </form>
 </div>
+
 <script id="roleListTemplate" type="x-tmpl-mustache">
 <ol class="dd-list ">
     {{#roleList}}
@@ -148,8 +149,10 @@
 
         var roleListTemplate = $("#roleListTemplate").html();
         Mustache.parse(roleListTemplate);
+
         var selectedUsersTemplate = $("#selectedUsersTemplate").html();
         Mustache.parse(selectedUsersTemplate);
+
         var unSelectedUsersTemplate = $("#unSelectedUsersTemplate").html();
         Mustache.parse(unSelectedUsersTemplate);
 
@@ -190,7 +193,9 @@
                 url: "/sys/role/list.json",
                 success: function (result) {
                     if (result.ret) {
-                        var rendered = Mustache.render(roleListTemplate, {roleList: result.data});
+                        var rendered = Mustache.render(roleListTemplate, {
+                            roleList: result.data
+                        });
                         $("#roleList").html(rendered);
                         bindRoleClick();
                         $.each(result.data, function (i, role) {
@@ -246,11 +251,12 @@
         }
 
         function handleRoleSelected(roleId) {
-            if (lastRoleId != -1) {
+            if (lastRoleId !== -1) {
                 var lastRole = $("#role_" + lastRoleId + " .dd2-content:first");
                 lastRole.removeClass("btn-yellow");
                 lastRole.removeClass("no-hover");
             }
+
             var currentRole = $("#role_" + roleId + " .dd2-content:first");
             currentRole.addClass("btn-yellow");
             currentRole.addClass("no-hover");
@@ -397,10 +403,15 @@
         });
 
         function updateRole(isCreate, successCallback, failCallback) {
+            var data = getFormObjectData($("#roleForm").serializeArray());
             $.ajax({
                 url: isCreate ? "/sys/role/save.json" : "/sys/role/update.json",
-                data: $("#roleForm").serializeArray(),
+                data: JSON.stringify(data),
                 type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 success: function (result) {
                     if (result.ret) {
                         loadRoleList();

@@ -57,4 +57,13 @@
             class_name: (isSuccess ? 'gritter-success' : 'gritter-warning') + (!$('#gritter-light').get(0).checked ? ' gritter-light' : '')
         });
     }
+
+    function getFormObjectData(formArray) {
+        var data = formArray.reduce(function (obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+        return data;
+    }
 </script>

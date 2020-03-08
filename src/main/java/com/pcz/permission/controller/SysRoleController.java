@@ -39,7 +39,7 @@ public class SysRoleController {
         return JsonData.success();
     }
 
-    @RequestMapping(value = "/page.json", method = RequestMethod.GET)
+    @RequestMapping(value = "/list.json", method = RequestMethod.GET)
     @ResponseBody
     public JsonData list() {
         return JsonData.success(sysRoleService.getAll());
