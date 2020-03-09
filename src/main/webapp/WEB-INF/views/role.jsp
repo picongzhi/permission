@@ -124,29 +124,18 @@
         </li>
     {{/roleList}}
 </ol>
-
-
-
 </script>
 
 <script id="selectedUsersTemplate" type="x-tmpl-mustache">
 {{#userList}}
     <option value="{{id}}" selected="selected">{{username}}</option>
 {{/userList}}
-
-
-
-
 </script>
 
 <script id="unSelectedUsersTemplate" type="x-tmpl-mustache">
 {{#userList}}
     <option value="{{id}}">{{username}}</option>
 {{/userList}}
-
-
-
-
 </script>
 
 <script type="text/javascript">
@@ -329,7 +318,7 @@
                             zTreeObj.push({
                                 id: aclPrefix + acl.id,
                                 pId: modulePrefix + acl.aclModuleId,
-                                name: acl.name + ((acl.type == 1) ? '(菜单)' : ''),
+                                name: acl.name + ((acl.type === 1) ? '(菜单)' : ''),
                                 chkDisabled: !acl.hasAcl,
                                 checked: acl.checked,
                                 dataId: acl.id
@@ -339,6 +328,7 @@
                             }
                         });
                     }
+
                     if ((aclModule.aclModuleList && aclModule.aclModuleList.length > 0) ||
                         (aclModule.aclList && aclModule.aclList.length > 0)) {
                         nodeMap[modulePrefix + aclModule.id] = {
@@ -347,6 +337,7 @@
                             name: aclModule.name,
                             open: hasChecked
                         };
+
                         var tempAclModule = nodeMap[modulePrefix + aclModule.id];
                         while (hasChecked && tempAclModule) {
                             if (tempAclModule) {
@@ -360,6 +351,7 @@
                             tempAclModule = nodeMap[tempAclModule.pId];
                         }
                     }
+
                     recursivePrepareTreeData(aclModule.aclModuleList);
                 });
             }
@@ -391,17 +383,23 @@
 
         $(".saveRoleAcl").click(function (e) {
             e.preventDefault();
-            if (lastRoleId == -1) {
+            if (lastRoleId === -1) {
                 showMessage("保存角色与权限点的关系", "请现在左侧选择需要操作的角色", false);
                 return;
             }
+
+            var data = {
+                roleId: lastRoleId,
+                aclIds: getTreeSelectedId()
+            };
             $.ajax({
                 url: "/sys/role/changeAcls.json",
-                data: {
-                    roleId: lastRoleId,
-                    aclIds: getTreeSelectedId()
-                },
+                data: JSON.stringify(data),
                 type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 success: function (result) {
                     if (result.ret) {
                         showMessage("保存角色与权限点的关系", "操作成功", false);
