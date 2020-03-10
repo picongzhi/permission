@@ -41,7 +41,7 @@ public class SysRoleAclServiceImpl implements SysRoleAclService {
 
     @Transactional
     void updateRoleAcls(Integer roleId, List<Integer> aclIdList) {
-        sysRoleAclMapper.deleteByPrimaryKey(roleId);
+        sysRoleAclMapper.deleteByRoleId(roleId);
         if (CollectionUtils.isEmpty(aclIdList)) {
             return;
         }

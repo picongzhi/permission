@@ -436,11 +436,12 @@
         }
 
         $("#roleTab a[data-toggle='tab']").on("shown.bs.tab", function (e) {
-            if (lastRoleId == -1) {
+            if (lastRoleId === -1) {
                 showMessage("加载角色关系", "请先在左侧选择操作的角色", false);
                 return;
             }
-            if (e.target.getAttribute("href") == '#roleAclTab') {
+
+            if (e.target.getAttribute("href") === '#roleAclTab') {
                 selectFirstTab = true;
                 loadRoleAcl(lastRoleId);
             } else {
@@ -455,11 +456,16 @@
                 data: {
                     roleId: selectedRoleId
                 },
-                type: 'POST',
+                type: 'GET',
                 success: function (result) {
                     if (result.ret) {
-                        var renderedSelect = Mustache.render(selectedUsersTemplate, {userList: result.data.selected});
-                        var renderedUnSelect = Mustache.render(unSelectedUsersTemplate, {userList: result.data.unselected});
+                        var renderedSelect = Mustache.render(selectedUsersTemplate, {
+                            userList: result.data.selected
+                        });
+                        var renderedUnSelect = Mustache.render(unSelectedUsersTemplate, {
+                            userList: result.data.unselected
+                        });
+
                         $("#roleUserList").html(renderedSelect + renderedUnSelect);
 
                         if (!hasMultiSelect) {
@@ -481,17 +487,23 @@
 
         $(".saveRoleUser").click(function (e) {
             e.preventDefault();
-            if (lastRoleId == -1) {
+            if (lastRoleId === -1) {
                 showMessage("保存角色与用户的关系", "请现在左侧选择需要操作的角色", false);
                 return;
             }
+
+            var data = {
+                roleId: lastRoleId,
+                userIds: $("#roleUserList").val() ? $("#roleUserList").val().join(",") : ''
+            };
             $.ajax({
                 url: "/sys/role/changeUsers.json",
-                data: {
-                    roleId: lastRoleId,
-                    userIds: $("#roleUserList").val() ? $("#roleUserList").val().join(",") : ''
-                },
+                data: JSON.stringify(data),
                 type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 success: function (result) {
                     if (result.ret) {
                         showMessage("保存角色与用户的关系", "操作成功", false);
