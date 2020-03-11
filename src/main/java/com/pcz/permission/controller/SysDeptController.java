@@ -1,20 +1,14 @@
 package com.pcz.permission.controller;
 
 import com.pcz.permission.common.JsonData;
-import com.pcz.permission.dto.DeptLevelDto;
 import com.pcz.permission.param.DeptParam;
 import com.pcz.permission.service.SysDeptService;
 import com.pcz.permission.service.SysTreeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 /**
  * @author picongzhi
@@ -52,5 +46,12 @@ public class SysDeptController {
     @RequestMapping("/dept.page")
     public ModelAndView page() {
         return new ModelAndView("dept");
+    }
+
+    @RequestMapping(value = "/delete.json", method = RequestMethod.DELETE)
+    @ResponseBody
+    public JsonData delete(@RequestParam("id") Integer id) {
+        sysDeptService.delete(id);
+        return JsonData.success();
     }
 }

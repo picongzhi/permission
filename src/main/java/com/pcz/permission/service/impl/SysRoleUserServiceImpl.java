@@ -36,7 +36,7 @@ public class SysRoleUserServiceImpl implements SysRoleUserService {
             return Lists.newArrayList();
         }
 
-        return sysUserMapper.getByIdIdList(userIdList);
+        return sysUserMapper.getByIdList(userIdList);
     }
 
     @Override

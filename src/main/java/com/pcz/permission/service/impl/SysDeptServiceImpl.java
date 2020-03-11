@@ -3,6 +3,7 @@ package com.pcz.permission.service.impl;
 import com.google.common.base.Preconditions;
 import com.pcz.permission.common.RequestHolder;
 import com.pcz.permission.dao.SysDeptMapper;
+import com.pcz.permission.dao.SysUserMapper;
 import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysDept;
 import com.pcz.permission.param.DeptParam;
@@ -25,6 +26,9 @@ import java.util.List;
 public class SysDeptServiceImpl implements SysDeptService {
     @Autowired
     private SysDeptMapper sysDeptMapper;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     @Override
     public void save(DeptParam deptParam) {
@@ -103,5 +107,21 @@ public class SysDeptServiceImpl implements SysDeptService {
         }
 
         sysDeptMapper.updateByPrimaryKeySelective(after);
+    }
+
+    @Override
+    public void delete(int deptId) {
+        SysDept sysDept = sysDeptMapper.selectByPrimaryKey(deptId);
+        Preconditions.checkNotNull(sysDept, "待删除的部门不存在，无法删除");
+
+        if (sysDeptMapper.countByParentId(deptId) > 0) {
+            throw new ParamException("当前部门下面有子部门，无法删除");
+        }
+
+        if (sysUserMapper.countByDeptId(deptId) > 0) {
+            throw new ParamException("当前部门下面有用户，无法删除");
+        }
+
+        sysDeptMapper.deleteByPrimaryKey(deptId);
     }
 }

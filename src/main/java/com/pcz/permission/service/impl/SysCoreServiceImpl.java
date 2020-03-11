@@ -43,7 +43,8 @@ public class SysCoreServiceImpl implements SysCoreService {
         return sysAclMapper.getByIdList(aclIdList);
     }
 
-    private List<SysAcl> getUserAclList(int userId) {
+    @Override
+    public List<SysAcl> getUserAclList(int userId) {
         if (isSuperAdmin()) {
             return sysAclMapper.getAll();
         }

@@ -183,4 +183,10 @@
         <include refid="Base_Column_List"/>
         FROM sys_acl_module
     </select>
+
+    <select id="countByParentId" parameterType="int" resultType="int">
+        SELECT COUNT(1)
+        FROM sys_acl_module
+        WHERE parent_id = #{parentId}
+    </select>
 </mapper>

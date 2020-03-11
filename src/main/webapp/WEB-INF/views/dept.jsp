@@ -277,10 +277,8 @@
                 var deptName = $(this).attr("data-name");
                 if (confirm("确定要删除部门[" + deptName + "]吗?")) {
                     $.ajax({
-                        url: "/sys/dept/delete.json",
-                        data: {
-                            id: deptId
-                        },
+                        url: "/sys/dept/delete.json?id=" + deptId,
+                        type: "DELETE",
                         success: function (result) {
                             if (result.ret) {
                                 showMessage("删除部门[" + deptName + "]", "操作成功", true);

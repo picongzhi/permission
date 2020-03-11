@@ -200,4 +200,18 @@ public class SysTreeServiceImpl implements SysTreeService {
             bindAclsWithOrder(aclModuleLevelDto.getAclModuleList(), moduleIdAclMap);
         }
     }
+
+    @Override
+    public List<AclModuleLevelDto> userAclTree(int userId) {
+        List<SysAcl> sysAclList = sysCoreService.getUserAclList(userId);
+        List<AclDto> aclDtoList = Lists.newArrayList();
+        for (SysAcl sysAcl : sysAclList) {
+            AclDto aclDto = AclDto.adapt(sysAcl);
+            aclDto.setHasAcl(true);
+            aclDto.setChecked(true);
+            aclDtoList.add(aclDto);
+        }
+
+        return aclListToTree(aclDtoList);
+    }
 }

@@ -447,10 +447,8 @@
                 var aclModuleName = $(this).attr("data-name");
                 if (confirm("确定要删除权限模块[" + aclModuleName + "]吗?")) {
                     $.ajax({
-                        url: "/sys/aclModule/delete.json",
-                        data: {
-                            id: aclModuleId
-                        },
+                        url: "/sys/aclModule/delete.json?id=" + aclModuleId,
+                        type: "DELETE",
                         success: function (result) {
                             if (result.ret) {
                                 showMessage("删除权限模块[" + aclModuleName + "]", "操作成功", true);

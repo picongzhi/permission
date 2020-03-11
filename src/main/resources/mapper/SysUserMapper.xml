@@ -204,7 +204,7 @@
         LIMIT #{page.offset}, #{page.pageSize}
     </select>
 
-    <select id="getByIdIdList" parameterType="map" resultMap="BaseResultMap">
+    <select id="getByIdList" parameterType="map" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM sys_user

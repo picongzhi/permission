@@ -2,6 +2,7 @@ package com.pcz.permission.service.impl;
 
 import com.google.common.base.Preconditions;
 import com.pcz.permission.common.RequestHolder;
+import com.pcz.permission.dao.SysAclMapper;
 import com.pcz.permission.dao.SysAclModuleMapper;
 import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysAclModule;
@@ -25,6 +26,9 @@ import java.util.List;
 public class SysAclModuleServiceImpl implements SysAclModuleService {
     @Autowired
     private SysAclModuleMapper sysAclModuleMapper;
+
+    @Autowired
+    private SysAclMapper sysAclMapper;
 
     @Override
     public void save(AclModuleParam param) {
@@ -105,5 +109,21 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
         }
 
         return sysAclModule.getLevel();
+    }
+
+    @Override
+    public void delete(int aclModuleId) {
+        SysAclModule sysAclModule = sysAclModuleMapper.selectByPrimaryKey(aclModuleId);
+        Preconditions.checkNotNull(sysAclModule, "待删除的权限模块不存在，无法删除");
+
+        if (sysAclModuleMapper.countByParentId(aclModuleId) > 0) {
+            throw new ParamException("待删除的权限模块存在子模块，无法删除");
+        }
+
+        if (sysAclMapper.countByAclModuleId(aclModuleId) > 0) {
+            throw new ParamException("待删除的权限模块存在权限点，无法删除");
+        }
+
+        sysAclModuleMapper.deleteByPrimaryKey(aclModuleId);
     }
 }
