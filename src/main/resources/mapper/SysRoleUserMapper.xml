@@ -104,7 +104,7 @@
     </update>
 
     <select id="getRoleIdListByUserId" parameterType="map" resultType="int">
-        SELECT user_id
+        SELECT role_id
         FROM sys_role_user
         WHERE user_id = #{userId}
     </select>

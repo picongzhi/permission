@@ -13,4 +13,6 @@ public interface SysCoreService {
     List<SysAcl> getRoleAclList(int roleId);
 
     List<SysAcl> getUserAclList(int userId);
+
+    boolean hasUrlAcl(String url);
 }
