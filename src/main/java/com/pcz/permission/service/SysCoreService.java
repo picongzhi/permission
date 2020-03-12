@@ -15,4 +15,6 @@ public interface SysCoreService {
     List<SysAcl> getUserAclList(int userId);
 
     boolean hasUrlAcl(String url);
+
+    List<SysAcl> getCurrentUserAclListFromCache();
 }
