@@ -8,9 +8,11 @@ import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysAclModule;
 import com.pcz.permission.param.AclModuleParam;
 import com.pcz.permission.service.SysAclModuleService;
+import com.pcz.permission.service.SysLogService;
 import com.pcz.permission.util.BeanValidator;
 import com.pcz.permission.util.IpUtil;
 import com.pcz.permission.util.LevelUtil;
+import com.pcz.permission.util.StringUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,9 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
 
     @Autowired
     private SysAclMapper sysAclMapper;
+
+    @Autowired
+    private SysLogService sysLogService;
 
     @Override
     public void save(AclModuleParam param) {
@@ -50,6 +55,7 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
         sysAclModule.setOperateTime(new Date());
 
         sysAclModuleMapper.insertSelective(sysAclModule);
+        sysLogService.saveAclModuleLog(null, sysAclModule);
     }
 
     @Override
@@ -76,22 +82,29 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
         after.setOperateTime(new Date());
 
         updateWithChild(before, after);
+        sysLogService.saveAclModuleLog(before, after);
     }
 
     @Transactional
     void updateWithChild(SysAclModule before, SysAclModule after) {
-        if (!after.getLevel().equals(before.getLevel())) {
-            List<SysAclModule> aclModuleList = sysAclModuleMapper.getChildAclModuleListByLevel(before.getLevel());
+        String oldLevelPrefix = LevelUtil.calculateLevel(before.getLevel(), before.getId());
+        String newLevelPrefix = after.getLevel();
+
+        if (!oldLevelPrefix.equals(newLevelPrefix)) {
+            List<SysAclModule> aclModuleList = sysAclModuleMapper.getChildAclModuleListByLevel(oldLevelPrefix);
             if (CollectionUtils.isNotEmpty(aclModuleList)) {
                 for (SysAclModule aclModule : aclModuleList) {
                     String level = aclModule.getLevel();
-                    if (level.indexOf(before.getLevel()) == 0) {
-                        level = after.getLevel() + level.substring(before.getLevel().length());
+                    if (level.indexOf(oldLevelPrefix) == 0) {
+                        level = LevelUtil.calculateLevel(newLevelPrefix, aclModule.getParentId());
                         aclModule.setLevel(level);
                     }
                 }
 
-                sysAclModuleMapper.batchUpdateLevel(aclModuleList);
+                for (SysAclModule sysAclModule : aclModuleList) {
+                    sysAclModuleMapper.updateByPrimaryKeySelective(sysAclModule);
+                }
+//                sysAclModuleMapper.batchUpdateLevel(aclModuleList);
             }
         }
 

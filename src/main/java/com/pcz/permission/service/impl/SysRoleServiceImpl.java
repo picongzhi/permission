@@ -11,6 +11,7 @@ import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysRole;
 import com.pcz.permission.model.SysUser;
 import com.pcz.permission.param.RoleParam;
+import com.pcz.permission.service.SysLogService;
 import com.pcz.permission.service.SysRoleService;
 import com.pcz.permission.util.BeanValidator;
 import com.pcz.permission.util.IpUtil;
@@ -39,6 +40,9 @@ public class SysRoleServiceImpl implements SysRoleService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private SysLogService sysLogService;
+
     @Override
     public void save(RoleParam param) {
         BeanValidator.check(param);
@@ -57,6 +61,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         sysRole.setOperateTime(new Date());
 
         sysRoleMapper.insertSelective(sysRole);
+        sysLogService.saveRoleLog(null, sysRole);
     }
 
     @Override
@@ -81,6 +86,7 @@ public class SysRoleServiceImpl implements SysRoleService {
         after.setOperateTime(new Date());
 
         sysRoleMapper.updateByPrimaryKeySelective(after);
+        sysLogService.saveRoleLog(before, after);
     }
 
     @Override

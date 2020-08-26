@@ -9,6 +9,7 @@ import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysAcl;
 import com.pcz.permission.param.AclParam;
 import com.pcz.permission.service.SysAclService;
+import com.pcz.permission.service.SysLogService;
 import com.pcz.permission.util.BeanValidator;
 import com.pcz.permission.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ import java.util.List;
 public class SysAclServiceImpl implements SysAclService {
     @Autowired
     private SysAclMapper sysAclMapper;
+
+    @Autowired
+    private SysLogService sysLogService;
 
     @Override
     public void save(AclParam param) {
@@ -49,6 +53,7 @@ public class SysAclServiceImpl implements SysAclService {
         sysAcl.setOperateTime(new Date());
 
         sysAclMapper.insertSelective(sysAcl);
+        sysLogService.saveAclLog(null, sysAcl);
     }
 
     @Override
@@ -76,6 +81,7 @@ public class SysAclServiceImpl implements SysAclService {
         after.setOperateTime(new Date());
 
         sysAclMapper.updateByPrimaryKeySelective(after);
+        sysLogService.saveAclLog(before, after);
     }
 
     private boolean checkExist(int aclModuleId, String name, Integer id) {

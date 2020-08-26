@@ -8,6 +8,7 @@ import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysDept;
 import com.pcz.permission.param.DeptParam;
 import com.pcz.permission.service.SysDeptService;
+import com.pcz.permission.service.SysLogService;
 import com.pcz.permission.util.BeanValidator;
 import com.pcz.permission.util.IpUtil;
 import com.pcz.permission.util.LevelUtil;
@@ -30,6 +31,9 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private SysLogService sysLogService;
+
     @Override
     public void save(DeptParam deptParam) {
         BeanValidator.check(deptParam);
@@ -49,6 +53,7 @@ public class SysDeptServiceImpl implements SysDeptService {
         sysDept.setOperateTime(new Date());
 
         sysDeptMapper.insertSelective(sysDept);
+        sysLogService.saveDeptLog(null, sysDept);
     }
 
     private boolean checkExist(Integer parentId, String deptName, Integer deptId) {
@@ -87,22 +92,29 @@ public class SysDeptServiceImpl implements SysDeptService {
         after.setOperateTime(new Date());
 
         updateWithChild(before, after);
+        sysLogService.saveDeptLog(before, after);
     }
 
     @Transactional
     void updateWithChild(SysDept before, SysDept after) {
-        if (!after.getLevel().equals(before.getLevel())) {
-            List<SysDept> deptList = sysDeptMapper.getChildDeptListByLevel(before.getLevel());
-            if (CollectionUtils.isNotEmpty(deptList)) {
-                for (SysDept dept : deptList) {
-                    String level = dept.getLevel();
-                    if (level.indexOf(before.getLevel()) == 0) {
-                        level = after.getLevel() + level.substring(before.getLevel().length());
-                        dept.setLevel(level);
+        String oldLevelPrefix = LevelUtil.calculateLevel(before.getLevel(), before.getId());
+        String newLevelPrefix = after.getLevel();
+
+        if (!oldLevelPrefix.equals(newLevelPrefix)) {
+            List<SysDept> sysDeptList = sysDeptMapper.getChildDeptListByLevel(oldLevelPrefix);
+            if (CollectionUtils.isNotEmpty(sysDeptList)) {
+                for (SysDept sysDept : sysDeptList) {
+                    String level = sysDept.getLevel();
+                    if (level.indexOf(oldLevelPrefix) == 0) {
+                        level = LevelUtil.calculateLevel(newLevelPrefix, sysDept.getParentId());
+                        sysDept.setLevel(level);
                     }
                 }
 
-                sysDeptMapper.batchUpdateLevel(deptList);
+                for (SysDept sysDept : sysDeptList) {
+                    sysDeptMapper.updateByPrimaryKeySelective(sysDept);
+                }
+//                sysAclModsysDeptMapperuleMapper.batchUpdateLevel(aclModuleList);
             }
         }
 

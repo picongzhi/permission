@@ -8,6 +8,7 @@ import com.pcz.permission.dao.SysUserMapper;
 import com.pcz.permission.exception.ParamException;
 import com.pcz.permission.model.SysUser;
 import com.pcz.permission.param.UserParam;
+import com.pcz.permission.service.SysLogService;
 import com.pcz.permission.service.SysUserService;
 import com.pcz.permission.util.BeanValidator;
 import com.pcz.permission.util.IpUtil;
@@ -26,6 +27,9 @@ import java.util.List;
 public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private SysLogService sysLogService;
 
     @Override
     public void save(UserParam param) {
@@ -48,6 +52,7 @@ public class SysUserServiceImpl implements SysUserService {
         sysUser.setOperateTime(new Date());
 
         sysUserMapper.insertSelective(sysUser);
+        sysLogService.saveUserLog(null, sysUser);
     }
 
     @Override
@@ -70,6 +75,7 @@ public class SysUserServiceImpl implements SysUserService {
         after.setOperateTime(new Date());
 
         sysUserMapper.updateByPrimaryKeySelective(after);
+        sysLogService.saveUserLog(before, after);
     }
 
     private void checkParam(UserParam param) {

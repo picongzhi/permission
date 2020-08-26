@@ -7,6 +7,7 @@ import com.pcz.permission.dao.SysRoleUserMapper;
 import com.pcz.permission.dao.SysUserMapper;
 import com.pcz.permission.model.SysRoleUser;
 import com.pcz.permission.model.SysUser;
+import com.pcz.permission.service.SysLogService;
 import com.pcz.permission.service.SysRoleUserService;
 import com.pcz.permission.util.IpUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -28,6 +29,9 @@ public class SysRoleUserServiceImpl implements SysRoleUserService {
 
     @Autowired
     private SysUserMapper sysUserMapper;
+
+    @Autowired
+    private SysLogService sysLogService;
 
     @Override
     public List<SysUser> getUserListByRoleId(int roleId) {
@@ -52,6 +56,7 @@ public class SysRoleUserServiceImpl implements SysRoleUserService {
         }
 
         updateRoleAcls(roleId, userIdList);
+        sysLogService.saveRoleUserLog(roleId, originUserIdList, userIdList);
     }
 
     @Transactional

@@ -29,7 +29,9 @@
         values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER},
                 #{operator,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR})
     </insert>
-    <insert id="insertSelective" parameterType="com.pcz.permission.model.SysRoleUser">
+    <insert id="insertSelective" parameterType="com.pcz.permission.model.SysRoleUser"
+            keyProperty="id"
+            useGeneratedKeys="true">
         insert into sys_role_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">

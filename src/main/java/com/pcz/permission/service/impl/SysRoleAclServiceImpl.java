@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.pcz.permission.common.RequestHolder;
 import com.pcz.permission.dao.SysRoleAclMapper;
 import com.pcz.permission.model.SysRoleAcl;
+import com.pcz.permission.service.SysLogService;
 import com.pcz.permission.service.SysRoleAclService;
 import com.pcz.permission.util.IpUtil;
 import org.apache.commons.collections.CollectionUtils;
@@ -24,6 +25,9 @@ public class SysRoleAclServiceImpl implements SysRoleAclService {
     @Autowired
     private SysRoleAclMapper sysRoleAclMapper;
 
+    @Autowired
+    private SysLogService sysLogService;
+
     @Override
     public void changeRoleAcls(Integer roleId, List<Integer> aclIdList) {
         List<Integer> originAclIdList = sysRoleAclMapper.getAclIdListByRoleIdList(Lists.newArrayList(roleId));
@@ -37,6 +41,7 @@ public class SysRoleAclServiceImpl implements SysRoleAclService {
         }
 
         updateRoleAcls(roleId, aclIdList);
+        sysLogService.saveRoleAclLog(roleId, originAclIdList, aclIdList);
     }
 
     @Transactional
